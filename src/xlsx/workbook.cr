@@ -1,7 +1,7 @@
 require "./exceptions.cr"
 include XlsxExceptions
 
-# Main entry point for creating an Exel workbook
+# Main entry point for creating an Excel workbook
 # Basic usage:
 #
 #    wb = Workbook.new("myworkbook.xlsx")
