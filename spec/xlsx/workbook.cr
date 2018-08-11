@@ -25,13 +25,20 @@ describe Workbook do
     typeof(sheet1).should eq Worksheet
   end
 
+  it "returns the worksheet that gets added" do
+    wb = Workbook.new("test.xlsx")
+    sheet1 = wb.add_worksheet("sheet1")
+
+    typeof(sheet1).should eq Worksheet
+    sheet1.name.should eq "sheet1"
+  end
+
   it "raises an exception you access worksheet before it's added" do
     expect_raises(XlsxExceptions::NoWorksheetException) do
       wb = Workbook.new("test.xlsx")
       sheet1 = wb.worksheets[0]
     end
   end
-
   
 end
 

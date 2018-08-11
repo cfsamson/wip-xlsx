@@ -4,5 +4,9 @@
     def initialize(@name)
       
     end
+
+    def write(ref : String, text : String)
+      
+    end
     
   end
