@@ -15,8 +15,14 @@ class Workbook
   @worksheets : Array(Worksheet)
 
   # Create a new workbook with the given name
-  # remember suffix ".xlsx" if you want the file to show as an excel file
-  # on you file system
+  # The workbook is initialized with no worksheets so to do anything
+  # with the workbook you will have to add a *worksheet* first.
+  # The *worksheet* is the main object interacting with the excel file.
+  #
+  #    wb = Workbook.new("myworkbook.xlsx")
+  #    ws = wb.add_worksheet("mysheet")
+  #
+  #
   def initialize(@name)
     @worksheets = [] of Worksheet
   end
@@ -43,20 +49,21 @@ class Workbook
     ws
   end
 
-  # Adds a worksheet with the given name to the workbook
-  # the workbook is initialized with no worksheets so to add data you
-  # will have to add a worksheet.
+  # Adds a worksheet with the given name (or default name if it isn't specified) 
+  # to the workbook. 
   # 
   # If you don't give it a name it will be given a unique name based
   # on the number of sheets added previously (Sheet1, Sheet2, ...)
-  def add_worksheet(name : String = "default")
-    ws : Worksheet
-    if(name == "default")
-      sheet_no = @worksheets.size + 1
-       ws = Worksheet.new "Sheet#{sheet_no}"
-    else
+  def add_worksheet(name : String)
     ws = Worksheet.new name
-    end
+    @worksheets << ws
+    ws
+  end
+
+  # ditto
+  def add_worksheet
+    sheet_no = @worksheets.size + 1
+    ws = Worksheet.new "Sheet#{sheet_no}"
     @worksheets << ws
     ws
   end
