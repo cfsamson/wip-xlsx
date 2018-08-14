@@ -16,7 +16,7 @@ describe Workbook do
     typeof(sheet1).should eq Worksheet
   end
   
-  it "can create ws without a given name" do
+  it "can create worksheet without a given name" do
     wb = Workbook.new("test.xlsx")
     wb.add_worksheet
     sheet1 = wb.get_worksheet(0)
@@ -25,7 +25,7 @@ describe Workbook do
     typeof(sheet1).should eq Worksheet
   end
 
-  it " can create multiple unique ws without given name" do
+  it " can create multiple unique worksheet without given name" do
     wb = Workbook.new("test.xlsx")
     sheet1 = wb.add_worksheet
     sheet2 = wb.add_worksheet
@@ -60,7 +60,7 @@ describe Workbook do
     end
   end
 
-  it "raises an exception if you try to access a ws by invalid index" do
+  it "raises an exception if you try to access a worksheet by invalid index" do
     wb = Workbook.new("test.xlsx")
     sheet1 = wb.add_worksheet("sheet1")
     expect_raises(XlsxExceptions::NoWorksheetException) do
@@ -68,7 +68,7 @@ describe Workbook do
     end
   end
 
-  it "raises an exception if you try to access a ws by invalid name" do
+  it "raises an exception if you try to access a worksheet by invalid name" do
     wb = Workbook.new("test.xlsx")
     sheet1 = wb.add_worksheet("sheet1")
     expect_raises(XlsxExceptions::NoWorksheetException) do
