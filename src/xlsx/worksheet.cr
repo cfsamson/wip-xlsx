@@ -6,7 +6,9 @@
     end
 
     def write(ref : String, text : String)
-      
+
     end
+
     
+
   end
