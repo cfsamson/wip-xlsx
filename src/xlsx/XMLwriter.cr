@@ -68,6 +68,18 @@ class XMLWriter
     fh.buffer << tag if fh
   end
 
+  # Write an empty XML tag with optional, unencoded, attributes.
+  # This is a minor speed optimization for elements that don't
+  # need encoding.
+  private def xml_start_tag_unencoded(tag, attributes : Hash(String, String))
+    raise XMLException.new("There is no filehandle set") if @fh.nil?
+    buff = @fh.not_nil!.buffer
+    buff << "<#{tag}"
+    attributes.each{|key, value| buff << %( #{key}="#{value}")}
+    buff << ">"
+  end
+
+  # Escape XML characters in attributes.
   private def escape_attributes(attribute)
     begin
       return attribute if @escapes.match(attribute).nil?

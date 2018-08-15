@@ -1,23 +1,5 @@
 require "./spec_helper.cr"
 
-class XMLTest < XMLWriter
-  def set_xml_writer(filename)
-    super
-  end
-
-  def xml_declaration
-    super
-  end
-
-  def xml_start_tag(tag)
-    super
-  end
-
-  def xml_start_tag(tag, attributes)
-    super
-  end
-end
-
 describe XMLWriter do
   it "initializes without parameters" do
     writer = XMLWriter.new
@@ -44,7 +26,7 @@ describe XMLWriter do
     tag.should eq "<mytag>"
   end
 
-  describe "start.tag()" do
+  describe "xml_start.tag()" do
     it "can write with attributes" do
       writer = XMLTest.new
       writer.set_xml_writer("testfile")
@@ -64,5 +46,42 @@ describe XMLWriter do
 
       tag.should eq "<foo span=\"&amp;&lt;&gt;&quot;\">"
     end
+
+    it "has option to add attributes unencoded" do
+      writer = XMLTest.new
+      writer.set_xml_writer("testfile")
+      attributes = {"span" => "&<>\""}
+      writer.xml_start_tag_unencoded "foo", attributes
+      tag = writer.fh.try(&.buffer.to_s)
+
+      File.write("test.xml", tag)
+      tag.should eq "<foo span=\"&<>\"\">"
+    end
+  end
+
+
+    
+
+  
+end
+class XMLTest < XMLWriter
+  def set_xml_writer(filename)
+    super
+  end
+
+  def xml_declaration
+    super
+  end
+
+  def xml_start_tag(tag)
+    super
+  end
+
+  def xml_start_tag(tag, attributes)
+    super
+  end
+
+  def xml_start_tag_unencoded(tag, attributes)
+    super
   end
 end
