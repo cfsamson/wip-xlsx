@@ -1,7 +1,7 @@
 # xlsx
 
 **NB! This package is a work in progress
-and will not work properly yet. The goal is to provide a full spec excel package.**
+and will not work properly yet. The goal is to provide a full spec excel package for writing excel files.**
 
 Package for creating excel files. Inspired by Pythons XlsxWriter.
 
@@ -24,7 +24,9 @@ require "xlsx"
 This is not ready for use yet
 
 ## Development
-
+- Basic writing of excel sheets with formatting and formulas
+- Graphs, charts, tables and advanced functionality
+- Possible parsing and mapping of excel files
 
 
 ## Contributing
