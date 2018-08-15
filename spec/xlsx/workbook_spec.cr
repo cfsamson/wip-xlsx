@@ -1,7 +1,6 @@
 require "./spec_helper.cr"
 
-describe Workbook do 
-
+describe Workbook do
   it "takes a filename" do
     wb = Workbook.new("test.xlsx")
     wb.name.should eq "test.xlsx"
@@ -15,12 +14,12 @@ describe Workbook do
     sheet1.name.should eq "sheet1"
     typeof(sheet1).should eq Worksheet
   end
-  
+
   it "can create worksheet without a given name" do
     wb = Workbook.new("test.xlsx")
     wb.add_worksheet
     sheet1 = wb.get_worksheet(0)
-    
+
     sheet1.name.should eq "Sheet1"
     typeof(sheet1).should eq Worksheet
   end
@@ -30,7 +29,7 @@ describe Workbook do
     sheet1 = wb.add_worksheet
     sheet2 = wb.add_worksheet
     sheet3 = wb.add_worksheet
-    
+
     sheet1.name.should_not eq sheet2.name
     sheet1.name.should_not eq sheet3.name
     sheet2.name.should_not eq sheet3.name
@@ -51,7 +50,6 @@ describe Workbook do
 
     retrieved.name.should eq sheet1.name
   end
-
 
   it "raises an exception you access worksheet before it's added" do
     expect_raises(XlsxExceptions::NoWorksheetException) do
@@ -75,7 +73,4 @@ describe Workbook do
       wb.get_worksheet("sheet2")
     end
   end
-  
 end
-
-

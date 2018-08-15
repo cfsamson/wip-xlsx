@@ -1,13 +1,14 @@
-
-# Base class for XlsxWriter
-struct FileBuffer
+require "./exceptions.cr"
+private class FileBuffer
   property name : String
-  property buffer : IO::Memory 
+  property buffer : IO::Memory
 
   def initialize(@name, @buffer = IO::Memory.new)
     @buffer.set_encoding("UTF-8")
   end
 end
+
+# Base class for XlsxWriter
 class XMLWriter
   getter fh : FileBuffer?
 
@@ -31,7 +32,7 @@ class XMLWriter
     end
   end
 
-  private def set_xml_writer(file : IO::FileDescriptor)
+  private def set_xml_writer(file : FileBuffer)
     @internal_fh = false
     @fh = file
   end
@@ -43,6 +44,41 @@ class XMLWriter
 
   # Write the XML declaration.
   private def xml_declaration
-    @fh.not_nil!.buffer << %(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n)
+    decl = %(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n)
+    @fh.try(&.buffer.print decl) # {|fh| fh.buffer << decl}
+
+  end
+
+  # Write an XML start tag with optional attributes.
+  private def xml_start_tag(tag, attributes : Hash(String, String))
+    raise XMLException.new("There is no filehandle set") if @fh.nil?
+    buff = @fh.not_nil!.buffer
+    buff << "<#{tag}"
+    attributes.each do |key, value|
+      value = escape_attributes(value)
+      buff << %( #{key}="#{value}")
+    end
+    buff << ">"
+  end
+
+  # ditto
+  private def xml_start_tag(tag)
+    tag = "<%s>" % tag
+    fh = @fh
+    fh.buffer << tag if fh
+  end
+
+  private def escape_attributes(attribute)
+    begin
+      return attribute if @escapes.match(attribute).nil?
+    rescue
+      return attribute
+    end
+
+    attribute = attribute.gsub('&', "&amp;")
+    attribute = attribute.gsub("\"", "&quot;")
+    attribute = attribute.gsub('<', "&lt;")
+    attribute = attribute.gsub('>', "&gt;")
+    attribute = attribute.gsub('\n', "&#xA;")
   end
 end

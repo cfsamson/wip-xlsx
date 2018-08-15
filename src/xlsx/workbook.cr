@@ -27,8 +27,7 @@ class Workbook
     @worksheets = [] of Worksheet
   end
 
-
-  # Gets a Array(Worksheet) by name, raises NoWorksheetException if 
+  # Gets a Array(Worksheet) by name, raises NoWorksheetException if
   # there are no worksheets
   def get_worksheet(name : String?)
     @worksheets.each do |ws|
@@ -39,7 +38,7 @@ class Workbook
     raise XlsxExceptions::NoWorksheetException.new
   end
 
-  # Gets a Array(Worksheet) by index, raises NoWorksheetException if 
+  # Gets a Array(Worksheet) by index, raises NoWorksheetException if
   # there are no worksheets
   def get_worksheet(index : Int32)
     ws = @worksheets[index]?
@@ -49,9 +48,9 @@ class Workbook
     ws
   end
 
-  # Adds a worksheet with the given name (or default name if it isn't specified) 
-  # to the workbook. 
-  # 
+  # Adds a worksheet with the given name (or default name if it isn't specified)
+  # to the workbook.
+  #
   # If you don't give it a name it will be given a unique name based
   # on the number of sheets added previously (Sheet1, Sheet2, ...)
   def add_worksheet(name : String)
@@ -67,6 +66,4 @@ class Workbook
     @worksheets << ws
     ws
   end
-
-  
 end

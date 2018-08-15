@@ -1,6 +1,5 @@
 require "./spec_helper"
 
-
 describe Xlsx do
   # TODO: Write tests
 
