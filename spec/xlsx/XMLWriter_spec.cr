@@ -54,16 +54,51 @@ describe XMLWriter do
       writer.xml_start_tag_unencoded "foo", attributes
       tag = writer.fh.try(&.buffer.to_s)
 
-      File.write("test.xml", tag)
       tag.should eq "<foo span=\"&<>\"\">"
     end
   end
 
+  it "can write end an xml_end_tag" do
+    writer = XMLTest.new
+    writer.set_xml_writer("testfile")
+    writer.xml_end_tag("foo")
+    tag = writer.fh.try(&.buffer.to_s)
 
-    
+    tag.should eq "</foo>"
+  end
 
+  it "can write an empty xml tag with attributes" do
+    writer = xml_test_factory()
+    writer.xml_empty_tag("foo", {"tst" => "val"})
+    tag = writer.fh.try(&.buffer.to_s)
+
+    tag.should eq %(<foo tst="val"/>)
+  end
+
+  it "can write an empty xml tag without attributes" do
+    writer = xml_test_factory()
+    writer.xml_empty_tag("foo")
+    tag = writer.fh.try(&.buffer.to_s)
+
+    tag.should eq %(<foo/>)
+  end
+  
+  it "can write an empty unencoded tag with attributes" do
+    writer = xml_test_factory()
+    writer.xml_empty_tag_unencoded("foo", {"span" => "&<>\""})
+    tag = writer.fh.try(&.buffer.to_s)
+
+    tag.should eq "<foo span=\"&<>\"\"/>"
+  end
   
 end
+
+def xml_test_factory() : XMLTest
+  test = XMLTest.new
+  test.set_xml_writer("testfile")
+  test
+end
+
 class XMLTest < XMLWriter
   def set_xml_writer(filename)
     super
@@ -84,4 +119,17 @@ class XMLTest < XMLWriter
   def xml_start_tag_unencoded(tag, attributes)
     super
   end
+
+  def xml_end_tag(tag)
+    super
+  end
+
+  def xml_empty_tag(tag, attributes)
+    super
+  end
+
+  def xml_empty_tag_unencoded(tag, attributes)
+    super
+  end
+
 end

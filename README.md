@@ -1,5 +1,8 @@
 # xlsx
 
+**NB! This package is a work in progress
+and will not work properly yet. The goal is to provide a full spec excel package.**
+
 Package for creating excel files. Inspired by Pythons XlsxWriter.
 
 ## Installation
@@ -18,11 +21,11 @@ dependencies:
 require "xlsx"
 ```
 
-TODO: Write usage instructions here
+This is not ready for use yet
 
 ## Development
 
-TODO: Write development instructions here
+
 
 ## Contributing
 

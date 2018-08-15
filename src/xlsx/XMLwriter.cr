@@ -79,6 +79,30 @@ class XMLWriter
     buff << ">"
   end
 
+  # Write an XML end tag.
+  private def xml_end_tag(tag)
+    @fh.try(&.buffer.print "</#{tag}>")
+  end
+
+  # Write an empty XML tag with optional attributes.
+  def xml_empty_tag(tag, attributes = {} of String => String)
+    attributes.each do |key, value|
+      value = escape_attributes value
+      tag += %( #{key}="#{value}")
+    end
+    @fh.try(&.buffer.print "<#{tag}/>")
+  end
+  
+  # Write an empty XML tag with optional, unencoded, attributes.
+  # This is a minor speed optimization for elements that don't
+  # need encoding.
+  def xml_empty_tag_unencoded(tag, attributes ={} of String => String)
+    attributes.each do |key, value|
+      tag += %( #{key}="#{value}")
+    end
+    @fh.try(&.buffer.print "<#{tag}/>")
+  end
+
   # Escape XML characters in attributes.
   private def escape_attributes(attribute)
     begin
