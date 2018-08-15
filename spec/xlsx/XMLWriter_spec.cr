@@ -19,12 +19,14 @@ describe XMLWriter do
     writer.should be_a(XMLWriter)
   end
 
-  it "can set an xml_writer with a name" do
+  it "can write xml declaration to buffer" do
     writer = XMLTest.new
     writer.set_xml_writer("testfile")
     writer.xml_declaration
-    fb = writer.fh.not_nil!
-    puts fb.buffer
+    buffer = writer.fh.not_nil!.buffer.rewind
+    xml_test = buffer.gets(14)
+    
+    xml_test.should eq "<?xml version="
   end
   
 end
