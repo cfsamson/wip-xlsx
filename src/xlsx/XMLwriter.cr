@@ -145,6 +145,8 @@ class XMLWriter
     @fh.try(&.buffer.print %q(<si>%s</si>) % str)
   end
 
+  
+
   # Escape XML characters in attributes.
   private def escape_attributes(attribute)
     begin
