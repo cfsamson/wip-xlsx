@@ -18,8 +18,7 @@ describe XMLWriter do
   end
 
   it "can write start_tag()" do
-    writer = XMLTest.new
-    writer.set_xml_writer("testfile")
+    writer = xml_test_factory()
     writer.xml_start_tag "mytag"
     tag = writer.fh.try(&.buffer.to_s)
 
@@ -28,8 +27,7 @@ describe XMLWriter do
 
   describe "xml_start.tag()" do
     it "can write with attributes" do
-      writer = XMLTest.new
-      writer.set_xml_writer("testfile")
+      writer = xml_test_factory()
       attributes = {"test" => "value", "name" => "carl"}
       writer.xml_start_tag "mytag", attributes
       tag = writer.fh.try(&.buffer.to_s)
@@ -38,8 +36,7 @@ describe XMLWriter do
     end
 
     it "escapes attributes that need escaping" do
-      writer = XMLTest.new
-      writer.set_xml_writer("testfile")
+      writer = xml_test_factory()
       attributes = {"span" => "&<>\""}
       writer.xml_start_tag "foo", attributes
       tag = writer.fh.try(&.buffer.to_s)
@@ -48,8 +45,7 @@ describe XMLWriter do
     end
 
     it "has option to add attributes unencoded" do
-      writer = XMLTest.new
-      writer.set_xml_writer("testfile")
+      writer = xml_test_factory()
       attributes = {"span" => "&<>\""}
       writer.xml_start_tag_unencoded "foo", attributes
       tag = writer.fh.try(&.buffer.to_s)
@@ -59,8 +55,7 @@ describe XMLWriter do
   end
 
   it "can write end an xml_end_tag" do
-    writer = XMLTest.new
-    writer.set_xml_writer("testfile")
+    writer = xml_test_factory()
     writer.xml_end_tag("foo")
     tag = writer.fh.try(&.buffer.to_s)
 
