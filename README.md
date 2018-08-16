@@ -39,4 +39,4 @@ This is not ready for use yet
 
 ## Contributors
 
-- [your-github-user](https://github.com/your-github-user) Carl Fredrik Samson - creator, maintainer
+- [cfsamson](https://github.com/cfsamson) Carl Fredrik Samson - creator, maintainer
