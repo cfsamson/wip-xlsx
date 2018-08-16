@@ -7,3 +7,6 @@ authors:
 crystal: 0.26.0
 
 license: MIT
+
+description: 
+  Create and parse Excel 2007+ XLSX file formatted files with data and advanced formatting
