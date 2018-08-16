@@ -140,6 +140,11 @@ class XMLWriter
     @fh.try(&.buffer.print %q(<si><t%s>%s</t></si>) % [attr, str])
   end
 
+  # Optimized tag writer for shared strings <si> rich string elements.
+  def xml_rich_si_element(str)
+    @fh.try(&.buffer.print %q(<si>%s</si>) % str)
+  end
+
   # Escape XML characters in attributes.
   private def escape_attributes(attribute)
     begin

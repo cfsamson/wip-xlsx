@@ -128,7 +128,15 @@ describe XMLWriter do
     writer.xml_si_element("foo", {"span" => "8"})
     tagelement = writer.fh.try(&.buffer.to_s)
 
-    tagelement.should eq %q(<ti><t span="8">foo</t></si>)
+    tagelement.should eq %q(<si><t span="8">foo</t></si>)
+  end
+
+  it "can write a rich si element" do
+    writer = xml_test_factory()
+    writer.xml_rich_si_element("foo")
+    tagelement = writer.fh.try(&.buffer.to_s)
+
+    tagelement.should eq %q(<si>foo</si>)
   end
 
 
