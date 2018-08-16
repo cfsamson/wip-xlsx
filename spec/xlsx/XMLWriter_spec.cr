@@ -82,7 +82,7 @@ describe XMLWriter do
 
     tag.should eq %(<foo/>)
   end
-  
+
   it "can write an empty unencoded tag with attributes" do
     writer = xml_test_factory()
     writer.xml_empty_tag_unencoded("foo", {"span" => "&<>\""})
@@ -90,10 +90,33 @@ describe XMLWriter do
 
     tag.should eq "<foo span=\"&<>\"\"/>"
   end
-  
+
+  it "can write xml data element without attributes" do
+    writer = xml_test_factory()
+    writer.xml_data_element("foo", "bar")
+    tagelement = writer.fh.try(&.buffer.to_s)
+
+    tagelement.should eq "<foo>bar</foo>"
+  end
+
+  it "can write xml data element with attributes" do
+    writer = xml_test_factory()
+    writer.xml_data_element("foo", "bar", {"span" => "8"})
+    tagelement = writer.fh.try(&.buffer.to_s)
+
+    tagelement.should eq "<foo span=\"8\">bar</foo>"
+  end
+
+  it "can write xml data element with data requiring escaping" do
+    writer = xml_test_factory()
+    writer.xml_data_element("foo", %(&<>"), {"span" => "8"})
+    tagelement = writer.fh.try(&.buffer.to_s)
+
+    tagelement.should eq %(<foo span="8">&amp;&lt;&gt;"</foo>)
+  end
 end
 
-def xml_test_factory() : XMLTest
+def xml_test_factory : XMLTest
   test = XMLTest.new
   test.set_xml_writer("testfile")
   test
@@ -131,5 +154,4 @@ class XMLTest < XMLWriter
   def xml_empty_tag_unencoded(tag, attributes)
     super
   end
-
 end

@@ -4,6 +4,7 @@ module XlsxExceptions
       super(message)
     end
   end
+
   class XMLException < Exception
     def initialize(message = "Error creating XML file")
       super(message)

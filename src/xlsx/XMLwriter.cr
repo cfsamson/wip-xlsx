@@ -1,4 +1,5 @@
 require "./exceptions.cr"
+
 private class FileBuffer
   property name : String
   property buffer : IO::Memory
@@ -75,7 +76,7 @@ class XMLWriter
     raise XMLException.new("There is no filehandle set") if @fh.nil?
     buff = @fh.not_nil!.buffer
     buff << "<#{tag}"
-    attributes.each{|key, value| buff << %( #{key}="#{value}")}
+    attributes.each { |key, value| buff << %( #{key}="#{value}") }
     buff << ">"
   end
 
@@ -92,15 +93,28 @@ class XMLWriter
     end
     @fh.try(&.buffer.print "<#{tag}/>")
   end
-  
+
   # Write an empty XML tag with optional, unencoded, attributes.
   # This is a minor speed optimization for elements that don't
   # need encoding.
-  def xml_empty_tag_unencoded(tag, attributes ={} of String => String)
+  def xml_empty_tag_unencoded(tag, attributes = {} of String => String)
     attributes.each do |key, value|
       tag += %( #{key}="#{value}")
     end
     @fh.try(&.buffer.print "<#{tag}/>")
+  end
+
+  # Write an XML element containing data with optional attributes.
+  def xml_data_element(tag, data, attributes = {} of String => String)
+    end_tag = tag
+
+    attributes.each do |key, value|
+      value = escape_attributes(value)
+      tag += %( #{key}="#{value}")
+    end
+
+    data = escape_data(data)
+    @fh.try(&.buffer.print "<#{tag}>#{data}</#{end_tag}>")
   end
 
   # Escape XML characters in attributes.
@@ -116,5 +130,19 @@ class XMLWriter
     attribute = attribute.gsub('<', "&lt;")
     attribute = attribute.gsub('>', "&gt;")
     attribute = attribute.gsub('\n', "&#xA;")
+  end
+
+  # Escape XML characters in data sections of tags.  Note, this
+  # is different from _escape_attributes() in that double quotes
+  # are not escaped by Excel.
+  private def escape_data(data)
+    begin
+      return data if @escapes.match(data).nil?
+    rescue
+      return data
+    end
+    data = data.gsub('&', "&amp;")
+    data = data.gsub('<', "&lt;")
+    data = data.gsub('>', "&gt;")
   end
 end
