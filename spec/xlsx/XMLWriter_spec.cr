@@ -114,7 +114,22 @@ describe XMLWriter do
 
     tagelement.should eq %(<foo span="8">&amp;&lt;&gt;"</foo>)
   end
+
+  it "can write a xml string element without attributes" do
+    writer = xml_test_factory()
+    writer.xml_string_element(99, {"span" => "8"})
+    tagelement = writer.fh.try(&.buffer.to_s)
+
+    tagelement.should eq %q(<c span="8" t=\"s\"><v>99</v></c>)
+  end
+
+  
+
+
 end
+
+
+
 
 def xml_test_factory : XMLTest
   test = XMLTest.new

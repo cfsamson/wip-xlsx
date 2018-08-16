@@ -117,6 +117,16 @@ class XMLWriter
     @fh.try(&.buffer.print "<#{tag}>#{data}</#{end_tag}>")
   end
 
+  # Optimized tag writer for <c> cell string elements in the inner loop.
+  def xml_string_element(index, attributes = {} of String => String)
+    attr = ""
+    attributes.each do |key, value|
+      value = escape_attributes(value)
+      attr += %( #{key}="#{value}")
+    end
+    @fh.try(&.buffer.print %q(<c%s t=\"s\"><v>%d</v></c>) % [attr, index] )
+  end
+
   # Escape XML characters in attributes.
   private def escape_attributes(attribute)
     begin
