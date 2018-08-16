@@ -124,7 +124,20 @@ class XMLWriter
       value = escape_attributes(value)
       attr += %( #{key}="#{value}")
     end
-    @fh.try(&.buffer.print %q(<c%s t=\"s\"><v>%d</v></c>) % [attr, index] )
+    @fh.try(&.buffer.print %q(<c%s t=\"s\"><v>%d</v></c>) % [attr, index])
+  end
+
+  # Optimized tag writer for shared strings <si> elements.
+  def xml_si_element(str, attributes = {} of String => String)
+    attr = ""
+
+    attributes.each do |key, value|
+      value = escape_attributes(value)
+      attr += %( #{key}="#{value}")
+    end
+
+    str = escape_data(str)
+    @fh.try(&.buffer.print %q(<si><t%s>%s</t></si>) % [attr, str])
   end
 
   # Escape XML characters in attributes.

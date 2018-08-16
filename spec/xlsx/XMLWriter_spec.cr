@@ -123,7 +123,14 @@ describe XMLWriter do
     tagelement.should eq %q(<c span="8" t=\"s\"><v>99</v></c>)
   end
 
-  
+  it "can write an xml si element" do
+    writer = xml_test_factory()
+    writer.xml_si_element("foo", {"span" => "8"})
+    tagelement = writer.fh.try(&.buffer.to_s)
+
+    tagelement.should eq %q(<ti><t span="8">foo</t></si>)
+  end
+
 
 
 end
