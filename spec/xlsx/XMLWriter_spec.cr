@@ -135,6 +135,14 @@ describe XMLWriter do
   end
 end
 
+it "can write a number element" do
+  writer = xml_test_factory()
+  writer.xml_number_element(99, {"span" => "8"})
+  tagelement = writer.fh.try(&.buffer.to_s)
+
+  tagelement.should eq %q(<c span="8"><v>99</v></c>)
+end
+
 def xml_test_factory : XMLTest
   test = XMLTest.new
   test.set_xml_writer("testfile")

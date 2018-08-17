@@ -144,7 +144,18 @@ abstract class XMLWriter
   def xml_rich_si_element(str)
     @fh.try(&.buffer.print %q(<si>%s</si>) % str)
   end
-  
+
+  # Optimized tag writer for <c> cell number elements in the inner loop.
+  def xml_number_element(number, attributes = {} of String => String)
+    attr = ""
+
+    attributes.each do |key, value|
+      value = escape_attributes(value)
+      attr += %( #{key}="#{value}")
+    end
+
+    @fh.try(&.buffer.print %q(<c%s><v>%.16g</v></c>) % [attr, number])
+  end
 
   # Escape XML characters in attributes.
   private def escape_attributes(attribute)
