@@ -1,8 +1,8 @@
 require "./spec_helper.cr"
 
 describe XMLWriter do
-  it "initializes without parameters" do
-    writer = XMLWriter.new
+  it "initializes when inherited by a class" do
+    writer = XMLTest.new
 
     writer.should be_a(XMLWriter)
   end

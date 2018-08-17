@@ -10,7 +10,7 @@ private class FileBuffer
 end
 
 # Base class for XlsxWriter
-class XMLWriter
+abstract class XMLWriter
   getter fh : FileBuffer?
 
   def initialize
@@ -20,38 +20,38 @@ class XMLWriter
   end
 
   # Set the writer filehandle directly. Mainly for testing.
-  private def set_filehandle(filehandle)
+  def set_filehandle(filehandle)
     @fh = filehandle
     @internal_fh = false
   end
 
   # Set the XML writer filehandle for the object.
-  private def set_xml_writer(filename : String)
+  def set_xml_writer(filename : String)
     if (@fh.nil?)
       @internal_fh = true
       @fh = FileBuffer.new(filename)
     end
   end
 
-  private def set_xml_writer(file : FileBuffer)
+  def set_xml_writer(file : FileBuffer)
     @internal_fh = false
     @fh = file
   end
 
   # Close the XML filehandle if we created it.
-  private def close
+  def close
     @fh.buffer.close if @internal_fh
   end
 
   # Write the XML declaration.
-  private def xml_declaration
+  def xml_declaration
     decl = %(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n)
     @fh.try(&.buffer.print decl) # {|fh| fh.buffer << decl}
 
   end
 
   # Write an XML start tag with optional attributes.
-  private def xml_start_tag(tag, attributes : Hash(String, String))
+  def xml_start_tag(tag, attributes : Hash(String, String))
     raise XMLException.new("There is no filehandle set") if @fh.nil?
     buff = @fh.not_nil!.buffer
     buff << "<#{tag}"
@@ -63,7 +63,7 @@ class XMLWriter
   end
 
   # ditto
-  private def xml_start_tag(tag)
+  def xml_start_tag(tag)
     tag = "<%s>" % tag
     fh = @fh
     fh.buffer << tag if fh
@@ -72,7 +72,7 @@ class XMLWriter
   # Write an empty XML tag with optional, unencoded, attributes.
   # This is a minor speed optimization for elements that don't
   # need encoding.
-  private def xml_start_tag_unencoded(tag, attributes : Hash(String, String))
+  def xml_start_tag_unencoded(tag, attributes : Hash(String, String))
     raise XMLException.new("There is no filehandle set") if @fh.nil?
     buff = @fh.not_nil!.buffer
     buff << "<#{tag}"
@@ -81,7 +81,7 @@ class XMLWriter
   end
 
   # Write an XML end tag.
-  private def xml_end_tag(tag)
+  def xml_end_tag(tag)
     @fh.try(&.buffer.print "</#{tag}>")
   end
 
@@ -145,7 +145,7 @@ class XMLWriter
     @fh.try(&.buffer.print %q(<si>%s</si>) % str)
   end
 
-  
+
 
   # Escape XML characters in attributes.
   private def escape_attributes(attribute)
