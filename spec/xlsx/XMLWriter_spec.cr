@@ -1,7 +1,7 @@
 require "./spec_helper.cr"
 
 describe XMLWriter do
-  it "initializes when inherited by a class" do
+  it "initializes coorectly when inherited by a class" do
     writer = XMLTest.new
 
     writer.should be_a(XMLWriter)
@@ -133,13 +133,7 @@ describe XMLWriter do
 
     tagelement.should eq %q(<si>foo</si>)
   end
-
-
-
 end
-
-
-
 
 def xml_test_factory : XMLTest
   test = XMLTest.new
@@ -148,5 +142,4 @@ def xml_test_factory : XMLTest
 end
 
 class XMLTest < XMLWriter
-
 end
