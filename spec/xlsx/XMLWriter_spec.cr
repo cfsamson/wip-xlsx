@@ -148,35 +148,5 @@ def xml_test_factory : XMLTest
 end
 
 class XMLTest < XMLWriter
-  def set_xml_writer(filename)
-    super
-  end
 
-  def xml_declaration
-    super
-  end
-
-  def xml_start_tag(tag)
-    super
-  end
-
-  def xml_start_tag(tag, attributes)
-    super
-  end
-
-  def xml_start_tag_unencoded(tag, attributes)
-    super
-  end
-
-  def xml_end_tag(tag)
-    super
-  end
-
-  def xml_empty_tag(tag, attributes)
-    super
-  end
-
-  def xml_empty_tag_unencoded(tag, attributes)
-    super
-  end
 end
