@@ -1,4 +1,7 @@
 module Utility
+
+  private COL_NAMES = {} of Int32 => String
+
   # Convert a zero indexed row and column cell reference to a A1 style string.
   #
   # *row* is the cell row. *col* is the cell column. *row_abs*
@@ -19,7 +22,8 @@ module Utility
   #
   # *col* the cell's column. he cell column. *col_abs* Optional flag to
   # make the column absolute.
-  #
+
+  #    xl_col_to_name(26)
   # ```text
   # Returns "AA"
   # ```
@@ -45,4 +49,25 @@ module Utility
     end
     "#{col_abs}#{col_str}"
   end
+
+  # Optimized version of the xl_rowcol_to_cell function. Only used internally.
+  #
+  # *row* is the cell row. *col* is the cell column
+  #       
+  #    xl_rowcol_to_cell_fast(2,2) # => "B2"
+  #
+  # TODO: Consider making protected?
+  def xl_rowcol_to_cell_fast(row, col)
+    cached_col = COL_NAMES[col]?
+
+    if cached_col
+      col_str = cached_col
+    else
+      col_str = xl_col_to_name(col)
+      COL_NAMES[col] = col_str
+    end
+    "#{col_str}#{row + 1}"
+  end
+
+
 end

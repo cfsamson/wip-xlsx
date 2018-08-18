@@ -47,4 +47,32 @@ describe Utility do
       xl_col_to_name(num,col_abs).should eq exp
     end
   end
+
+  it "can do fast lookup by caching column names" do
+    tests = [
+            # row, col, A1 string
+            {0, 0, "A1"},
+            {0, 1, "B1"},
+            {0, 2, "C1"},
+            {0, 9, "J1"},
+            {1, 0, "A2"},
+            {2, 0, "A3"},
+            {9, 0, "A10"},
+            {1, 24, "Y2"},
+            {7, 25, "Z8"},
+            {9, 26, "AA10"},
+            {1, 254, "IU2"},
+            {1, 255, "IV2"},
+            {1, 256, "IW2"},
+            {0, 16383, "XFD1"},
+            {1048576, 16384, "XFE1048577"},
+        ]
+
+         tests.each do |test|
+      row = test[0]
+      col = test[1]
+      exp = test[2]
+      xl_rowcol_to_cell_fast(row,col).should eq exp
+    end
+  end
 end
