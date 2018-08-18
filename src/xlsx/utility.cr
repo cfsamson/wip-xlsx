@@ -1,5 +1,4 @@
 module Utility
-
   private COL_NAMES = {} of Int32 => String
 
   # Convert a zero indexed row and column cell reference to a A1 style string.
@@ -53,7 +52,7 @@ module Utility
   # Optimized version of the xl_rowcol_to_cell function. Only used internally.
   #
   # *row* is the cell row. *col* is the cell column
-  #       
+  #
   #    xl_rowcol_to_cell_fast(2,2) # => "B2"
   #
   # TODO: Consider making protected?
@@ -68,6 +67,4 @@ module Utility
     end
     "#{col_str}#{row + 1}"
   end
-
-
 end
