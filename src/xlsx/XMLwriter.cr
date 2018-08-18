@@ -157,6 +157,23 @@ abstract class XMLWriter
     @fh.try(&.buffer.print %q(<c%s><v>%.16g</v></c>) % [attr, number])
   end
 
+  # Optimized tag writer for <c> cell formula elements in the inner loop.
+  def xml_formula_element(formula, result, attributes = {} of String => String)
+    attr = ""
+
+    attributes.each do |key, value|
+      value = escape_attributes(value)
+      attr += %( #{key}="#{value}")
+    end
+
+    formule = escape_data(formula)
+    result = escape_data(result)
+
+    @fh.try do |fh|
+      fh.buffer.print %q(<c%s><f>%s</f><v>%s</v></c>) % [attr, formula, result]
+    end 
+  end
+
   # Escape XML characters in attributes.
   private def escape_attributes(attribute)
     begin
@@ -176,13 +193,15 @@ abstract class XMLWriter
   # is different from _escape_attributes() in that double quotes
   # are not escaped by Excel.
   private def escape_data(data)
+    res = "Failed!"
     begin
-      return data if @escapes.match(data).nil?
+      res = data.to_s
+      return data if @escapes.match(res).nil?
     rescue
       return data
     end
-    data = data.gsub('&', "&amp;")
-    data = data.gsub('<', "&lt;")
-    data = data.gsub('>', "&gt;")
+    res = res.gsub('&', "&amp;")
+    res = res.gsub('<', "&lt;")
+    res = res.gsub('>', "&gt;")
   end
 end

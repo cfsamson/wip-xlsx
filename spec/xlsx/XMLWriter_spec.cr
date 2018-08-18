@@ -143,6 +143,14 @@ it "can write a number element" do
   tagelement.should eq %q(<c span="8"><v>99</v></c>)
 end
 
+it "can write a formula element" do
+  writer = xml_test_factory()
+  writer.xml_formula_element("1+2", 3, {"span" => "8"})
+  tagelement = writer.fh.try(&.buffer.to_s)
+
+  tagelement.should eq %q(<c span="8"><f>1+2</f><v>3</v></c>)
+end
+
 def xml_test_factory : XMLTest
   test = XMLTest.new
   test.set_xml_writer("testfile")
