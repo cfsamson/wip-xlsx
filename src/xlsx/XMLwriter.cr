@@ -171,7 +171,38 @@ abstract class XMLWriter
 
     @fh.try do |fh|
       fh.buffer.print %q(<c%s><f>%s</f><v>%s</v></c>) % [attr, formula, result]
-    end 
+    end
+  end
+
+  # Set the <t> attribute to preserve whitespace.
+  def xml_inline_string(str, preserve, attributes = {} of String => String)
+    attr = ""
+    t_attr = ""
+
+    # Take care with initial space
+    t_attr = %q( xml:space="preserve") if preserve
+
+    attributes.each do |key, value|
+      value = escape_attributes(value)
+      attr += %( #{key}="#{value}")
+    end
+
+    str = escape_data(str)
+
+    tag = %q(<c%s t="inlineStr"><is><t%s>%s</t></is></c>) % [attr, t_attr, str]
+    @fh.try(&.buffer.print tag)
+  end
+
+  # Optimized tag writer for rich inlineStr in the inner loop.
+  def xml_rich_inline_string(str, attributes = {} of String => String)
+    attr = ""
+
+    attributes.each do |key, value|
+      value = escape_attributes(value)
+      attr += %( #{key}="#{value}")
+    end
+
+    @fh.try(&.buffer.print %q(<c%s t="inlineStr"><is>%s</is></c>) % [attr, str])
   end
 
   # Escape XML characters in attributes.

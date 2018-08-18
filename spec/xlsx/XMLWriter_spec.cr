@@ -151,6 +151,31 @@ it "can write a formula element" do
   tagelement.should eq %q(<c span="8"><f>1+2</f><v>3</v></c>)
 end
 
+it "can write inline string without whitespace" do
+  writer = xml_test_factory()
+  writer.xml_inline_string("test", false, {"span" => "8"})
+  tagelement = writer.fh.try(&.buffer.to_s)
+
+  tagelement.should eq %q(<c span="8" t="inlineStr"><is><t>test</t></is></c>)
+end
+
+it "can write inline string with whitespace preserved" do
+  writer = xml_test_factory()
+  writer.xml_inline_string("test", true, {"span" => "8"})
+  tagelement = writer.fh.try(&.buffer.to_s)
+
+  exp = %q(<c span="8" t="inlineStr"><is><t xml:space="preserve">test</t></is></c>)
+  tagelement.should eq exp
+end
+
+it "can write a rich inline string" do
+  writer = xml_test_factory()
+  writer.xml_rich_inline_string("test", {"span" => "8"})
+  tagelement = writer.fh.try(&.buffer.to_s)
+
+  tagelement.should eq %q(<c span="8" t="inlineStr"><is>test</is></c>)
+end
+
 def xml_test_factory : XMLTest
   test = XMLTest.new
   test.set_xml_writer("testfile")
