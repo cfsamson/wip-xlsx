@@ -10,7 +10,9 @@ module Utility
   def xl_rowcol_to_cell(row : Int32, col : Int32, row_abs = false, col_abs = false) : String
     row += 1 # need base 1 index
     row_abs = row_abs ? "$" : ""
-    col_str = xl_col_to_name(col, cl_abs)
+    col_str = xl_col_to_name(col, col_abs)
+
+    return "#{col_str}#{row_abs}#{row}"
   end
 
   # Convert a zero indexed column cell reference to a string.
