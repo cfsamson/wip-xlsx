@@ -224,7 +224,7 @@ abstract class XMLWriter
   # is different from _escape_attributes() in that double quotes
   # are not escaped by Excel.
   private def escape_data(data)
-    res = "Failed!"
+    res = "Failed! XMLWriter.escape_data"
     begin
       res = data.to_s
       return data if @escapes.match(res).nil?
