@@ -10,4 +10,10 @@ module XlsxExceptions
       super(message)
     end
   end
+
+  class CellReferenceParseException < Exception
+    def initialize(message = "Invalid cell cell reference string, should be like \"A1\"")
+      super(message)
+    end
+  end
 end
