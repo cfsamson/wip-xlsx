@@ -80,8 +80,8 @@ module Utility
   # Convert a cell reference in A1 notation to a zero indexed row and column.
   # *cell_str*  is an A1 style string (A1, B1, A2 etc)
   #
-  # TODO: a string like "A1xx" passes since the start of the stringis a 
-  # valid match. This is an edge but we should still consider catching it
+  # TODO: a string like "A1xx" passes since the start of the string is a 
+  # valid match. This is an edge case but should still consider catching it
   def xl_cell_to_rowcell(cell_str) : RowCol
 
     # if the string is empty or whitespace, we just return reference to "A1"
