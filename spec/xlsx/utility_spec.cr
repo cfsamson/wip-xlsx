@@ -74,4 +74,31 @@ describe Utility do
       xl_rowcol_to_cell_fast(row, col).should eq exp
     end
   end
+
+  it "can convert a rowcell string reference to a RowCell object" do
+    tests = [
+      {"A1", RowCol.new(0, 0)},
+      {"$A1", RowCol.new(0, 0)},
+      {"A$1", RowCol.new(0, 0)},
+      {"$A$1", RowCol.new(0, 0)},
+      {"B2", RowCol.new(1, 1)},
+      {"AA50", RowCol.new(49, 26)},
+      {"Z10", RowCol.new(9, 25)},
+    ]
+
+    tests.each do |test, expected|
+      got = xl_cell_to_rowcell(test)
+
+      got.should eq expected
+    end
+  end
+
+  it "throws exception if an invalid string is passed" do
+    tests = ["ZYS", "foo", "A?1xx", "A:?xys"]
+    tests.each do |test|
+      expect_raises Exception do
+        xl_cell_to_rowcell test
+      end
+    end
+  end
 end

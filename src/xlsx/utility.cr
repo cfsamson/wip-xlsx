@@ -1,8 +1,8 @@
 require "./exceptions.cr"
 
 module Utility
-  private COL_NAMES = {} of Int32 => String
-  private range_parts = Regex.new("(\$?)([A-Z]{1,3})(\$?)(\d+)")
+  private COL_NAMES   = {} of Int32 => String
+  private RANGE_PARTS = Regex.new(%q((\$?)([A-Z]{1,3})(\$?)(\d+)))
 
   # Represents a zero indexed row and column coordinates in the excel cheet.
   #    RowCol.new(0,0) # => "A1"
@@ -79,35 +79,40 @@ module Utility
 
   # Convert a cell reference in A1 notation to a zero indexed row and column.
   # *cell_str*  is an A1 style string (A1, B1, A2 etc)
+  #
+  # TODO: a string like "A1xx" passes since the start of the stringis a 
+  # valid match. This is an edge but we should still consider catching it
   def xl_cell_to_rowcell(cell_str) : RowCol
-    return RowCol(0, 0) if cell_str.empty?
 
-    match = range_parts.match(cell_str)
-    col_str = ""
-    row_str = ""
+    # if the string is empty or whitespace, we just return reference to "A1"
+    return RowCol.new(0, 0) if cell_str.empty?
+    match = RANGE_PARTS.match(cell_str)
+
+    # if no match at all we throw an error
+    raise XlsxExceptions::CellReferenceParseException.new if match.nil?
+
     begin
       col_str = match[2]
       row_str = match[4]
 
-       # convert base 26 columnd string to number
-       expon = 0
-       col = 0
-       col_str.reverse.each_char do |char|
-         col += (char.ord - 'A'.ord + 1) * (26 ** expon)
-         expon += 1
-       end
+      # convert base 26 columnd string to number
+      expon = 0
+      col = 0
+      col_str.reverse.each_char do |chr|
+        col += (chr.ord - 'A'.ord + 1) * (26 ** expon)
+        expon += 1
+      end
 
-       # convert 1-base index to 0-base index
-       row = row_str.to_i32 - 1
-       col -= 1
+      # convert 1-base index to 0-base index
+      row = row_str.to_i32 - 1
+      col -= 1
 
-       return RowCol.new(row, col)
+      return RowCol.new(row, col)
     rescue exception
       if typeof(exception) == IndexError
         raise XlsxExceptions::CellReferenceParseException.new
       end
       raise exception
     end
-
   end
 end
