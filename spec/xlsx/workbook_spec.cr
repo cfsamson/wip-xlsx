@@ -6,7 +6,7 @@ describe Workbook do
     wb.name.should eq "test.xlsx"
   end
 
-  context "add_worksheet" do
+  describe "#add_worksheet" do
     it "can create a worksheet" do
       wb = Workbook.new("test.xlsx")
       wb.add_worksheet("sheet1")
@@ -45,7 +45,7 @@ describe Workbook do
     end
   end
 
-  context "get_worksheet" do
+  describe "#get_worksheet" do
     it "can get a worksheet by name" do
       wb = Workbook.new("test.xlsx")
       sheet1 = wb.add_worksheet("sheet1")
