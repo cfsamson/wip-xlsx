@@ -8,6 +8,7 @@ module Utility
   #    RowCol.new(0,0) # => "A1"
   #    RowCol.new(1,1) # => "B2"
   #
+  # TODO: Consider refactoring to using tuple, easier implementation!
   record RowCol, row : Int32, col : Int32
 
   # Convert a zero indexed row and column cell reference to a A1 style string.
@@ -80,10 +81,9 @@ module Utility
   # Convert a cell reference in A1 notation to a zero indexed row and column.
   # *cell_str*  is an A1 style string (A1, B1, A2 etc)
   #
-  # TODO: a string like "A1xx" passes since the start of the string is a 
+  # TODO: a string like "A1xx" passes since the start of the string is a
   # valid match. This is an edge case but should still consider catching it
-  def xl_cell_to_rowcell(cell_str) : RowCol
-
+  def xl_cell_to_rowcol(cell_str : String) : RowCol
     # if the string is empty or whitespace, we just return reference to "A1"
     return RowCol.new(0, 0) if cell_str.empty?
     match = RANGE_PARTS.match(cell_str)
@@ -114,5 +114,42 @@ module Utility
       end
       raise exception
     end
+  end
+
+  # Convert an absolute cell reference in A1 notation to a zero indexed
+  # row and column, with True/False values for absolute rows or columns.
+  #
+  # *cell_str* is an A1 style cell reference.
+  # returns a `Tuple` of *row, col, row_abs, col_abs*
+  #
+  # NOTE: Remember index is normalized to a zero-index.
+  # TODO: Consider using a struct return type instad. REVISIT!
+  def xl_cell_to_rowcol_abs(cell_str : String) : {Int32, Int32, Bool, Bool}
+    return {0, 0, false, false} if cell_str.empty?
+
+    match = RANGE_PARTS.match(cell_str)
+    raise XlsxExceptions::CellReferenceParseException.new if match.nil?
+    col_abs = match[1]
+    col_str = match[2]
+    row_abs = match[3]
+    row_str = match[4]
+
+    # match group returns "" if no match is found, returns "$" if found
+    col_abs = !col_abs.empty?
+    row_abs = !row_abs.empty?
+
+    # convert base 26 columnd string to number
+    expon = 0
+    col = 0
+    col_str.reverse.each_char do |chr|
+      col += (chr.ord - 'A'.ord + 1) * (26 ** expon)
+      expon += 1
+    end
+
+    # convert 1-base index to 0-base index
+    row = row_str.to_i32 - 1
+    col -= 1
+
+    {row, col, row_abs, col_abs}
   end
 end
