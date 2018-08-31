@@ -2,7 +2,7 @@ require "./spec_helper.cr"
 include Utility
 
 describe Utility do
-  context "xl_rowcol_to_cell" do
+  describe "#xl_rowcol_to_cell" do
     it "can convert a zero indexed row/col to xl string reference" do
       tests = [
         # row, col, A1 string
@@ -29,7 +29,7 @@ describe Utility do
     end
   end
 
-  context "xl_col_to_name" do
+  describe "#xl_col_to_name" do
     it "can convert a colum index to column string" do
       cases = [
         {0, false, "A"},
@@ -51,7 +51,7 @@ describe Utility do
     end
   end
 
-  context "xl_rowcol_to_cell_fast" do
+  describe "#xl_rowcol_to_cell_fast" do
     it "can do fast lookup by caching column names" do
       tests = [
         # row, col, A1 string
@@ -80,7 +80,7 @@ describe Utility do
       end
     end
   end
-  context "xl_cell_to_rowcol" do
+  describe "#xl_cell_to_rowcol" do
     it "can convert a rowcol string reference to a RowCol object" do
       tests = [
         {"A1", RowCol.new(0, 0)},
@@ -108,7 +108,7 @@ describe Utility do
       end
     end
   end
-  context "xl_cell_to_rowcol_abs" do
+  describe "#xl_cell_to_rowcol_abs" do
     it "converts an absolute reference correctly" do
       tests = [
         {"A1", {0, 0, false, false}},
